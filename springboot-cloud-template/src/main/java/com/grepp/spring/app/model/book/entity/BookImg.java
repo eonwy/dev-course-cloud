@@ -33,6 +33,6 @@ public class BookImg extends BaseEntity {
     }
     
     public String getUrl(){
-        return "/download/" + savePath + renameFileName;
+        return savePath + renameFileName;
     }
 }
