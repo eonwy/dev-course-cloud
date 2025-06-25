@@ -95,6 +95,14 @@ public class SecurityConfig {
                                   .requestMatchers("/member/signin", "/member/signup", "/login","/logout").permitAll()
                                   .requestMatchers("/book/**").permitAll()
                                   .requestMatchers("/auth/**").permitAll()
+                                    .requestMatchers(
+                                        "/swagger-ui/**",
+                                        "/v3/api-docs/**",
+                                        "/swagger-resources/**",
+                                        "/swagger-resources",
+                                        "/swagger-ui.html",
+                                        "/webjars/**"
+                                    ).permitAll()
                                   .anyRequest().authenticated()
             )
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
