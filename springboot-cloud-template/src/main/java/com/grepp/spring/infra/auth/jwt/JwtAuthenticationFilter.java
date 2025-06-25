@@ -94,7 +94,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     
     private void addToken(HttpServletResponse response, Claims claims, RefreshToken refreshToken) {
         String username = claims.getSubject();
-        AccessTokenDto newAccessToken = jwtTokenProvider.generateAccessToken(username);
+        AccessTokenDto newAccessToken = jwtTokenProvider.generateAccessToken(username,
+            (String) claims.get("roles"));
         Authentication authentication = jwtTokenProvider.getAuthentication(newAccessToken.getToken());
         
         SecurityContextHolder.getContext().setAuthentication(authentication);

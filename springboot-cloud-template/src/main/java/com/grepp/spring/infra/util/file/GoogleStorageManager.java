@@ -15,25 +15,25 @@ import org.springframework.web.multipart.MultipartFile;
 
 @Component
 public class GoogleStorageManager extends AbstractFileManager{
-
+    
     @Value("${google.cloud.storage.bucket}")
     private String bucket;
     private final String storageBaseUrl = "https://storage.googleapis.com/";
-
+    
     @Override
     protected void uploadFile(MultipartFile file, FileDto fileDto) throws IOException {
         Storage storage = StorageOptions.getDefaultInstance().getService();
-
-        if (file.getOriginalFilename() == null) {
-            throw new CommonException(ResponseCode.BAD_REQUEST);
+        
+        if(file.getOriginalFilename() == null){
+            throw new CommonException(ResponseCode.INVALID_FILENAME);
         }
-
-        String renameFileName = fileDto.renameFileName();
-        BlobId blobId = BlobId.of(bucket, fileDto.depth() + "/" + renameFileName);
+        
+        String renameFilename = fileDto.renameFileName();
+        BlobId blobId = BlobId.of(bucket, fileDto.depth() + "/" + renameFilename);
         BlobInfo blobInfo = BlobInfo.newBuilder(blobId).setContentType(file.getContentType()).build();
         Blob blob = storage.create(blobInfo, file.getBytes());
     }
-
+    
     @Override
     protected String createSavePath(String depth) {
         return storageBaseUrl + bucket + "/" + depth + "/";

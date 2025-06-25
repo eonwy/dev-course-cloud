@@ -23,27 +23,27 @@ import org.thymeleaf.context.Context;
 @Slf4j
 @RequiredArgsConstructor
 public class AuthExceptionAdvice {
-
+    
     private final TemplateEngine templateEngine;
-
+    
     @ResponseBody
     @ExceptionHandler(AuthApiException.class)
     public ResponseEntity<ApiResponse<String>> authApiExHandler(
         AuthApiException ex) {
         return ResponseEntity
-            .status(ex.code().status())
-            .body(ApiResponse.error(ex.code()));
+                   .status(ex.code().status())
+                   .body(ApiResponse.error(ex.code()));
     }
-
+    
     @ResponseBody
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<ApiResponse<String>> authExHandler(
         AuthenticationException ex) {
         return ResponseEntity
-            .status(HttpStatus.UNAUTHORIZED)
-            .body(ApiResponse.error(ResponseCode.UNAUTHORIZED));
+                   .status(HttpStatus.UNAUTHORIZED)
+                   .body(ApiResponse.error(ResponseCode.UNAUTHORIZED));
     }
-
+    
     @ResponseBody
     @ExceptionHandler(AuthWebException.class)
     public String authWebExHandler(AuthWebException ex, HttpServletResponse response)
@@ -59,6 +59,6 @@ public class AuthExceptionAdvice {
         context.setVariables(properties);
         return templateEngine.process(templatePath, context);
     }
-
-
+    
+    
 }

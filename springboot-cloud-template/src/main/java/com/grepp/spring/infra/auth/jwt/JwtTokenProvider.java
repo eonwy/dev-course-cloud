@@ -2,7 +2,6 @@ package com.grepp.spring.infra.auth.jwt;
 
 import com.grepp.spring.app.model.auth.code.AuthToken;
 import com.grepp.spring.app.model.auth.domain.Principal;
-import com.grepp.spring.app.model.auth.token.RefreshTokenRepository;
 import com.grepp.spring.infra.auth.jwt.dto.AccessTokenDto;
 import com.grepp.spring.infra.config.security.UserDetailsServiceImpl;
 import io.jsonwebtoken.Claims;
@@ -59,17 +58,17 @@ public class JwtTokenProvider {
     }
     
     // Access Token 생성
-    public AccessTokenDto generateAccessToken(String username) {
-        
+    public AccessTokenDto generateAccessToken(String username, String roles) {
         String id = UUID.randomUUID().toString();
         long now = (new Date()).getTime();
         Date accessTokenExpiresIn = new Date(now + accessTokenExpiration);
-        String token =  Jwts.builder()
-                   .subject(username)
-                   .id(id)
-                   .expiration(accessTokenExpiresIn)
-                   .signWith(getSecretKey())
-                   .compact();
+        String token = Jwts.builder()
+                           .subject(username)
+                           .id(id)
+                           .claim("roles", roles)
+                           .expiration(accessTokenExpiresIn)
+                           .signWith(getSecretKey())
+                           .compact();
         
         return AccessTokenDto.builder()
                    .jti(id)
@@ -90,7 +89,7 @@ public class JwtTokenProvider {
         return new UsernamePasswordAuthenticationToken(principal, "", authorities);
     }
     
-    public Claims getClaims(String accessToken){
+    public Claims getClaims(String accessToken) {
         return parseClaims(accessToken);
     }
     
